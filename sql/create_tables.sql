@@ -25,4 +25,11 @@ CREATE TABLE post (
     FOREIGN KEY (user_id) REFERENCES user(user_id)
 );
 
+CREATE TABLE token (
+    token varchar(511) NOT NULL,
+    user_id int,
+    PRIMARY KEY (token),
+    FOREIGN KEY (user_id) REFERENCES user(user_id)
+);
+
 commit;

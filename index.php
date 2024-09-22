@@ -9,26 +9,37 @@
 </head>
 <body>
 
-    <?php
-
-
-    if (isset($_SESSION['message'])) {
-        unset($_SESSION['message']); // Clear the message after displaying it
-    }
-    ?>
-
     <form method="GET" action="index.php">
         <input type="text" name="query">
         <input type="submit" value="Search!">
     </form>
 
-</body>
-</html>
+    <form method="POST" action="index.php">
+        <input type="hidden" name="new_acct">
+        <input type="submit" value="Create Account">
+    </form>
 
-<?php
+    <form method="POST" action="index.php">
+        <input type="hidden" name="login">
+        <input type="submit" value="Login">
+    </form>
+
+    <?php
 
 
     include 'db_connect.php';
+
+    if($_SERVER["REQUEST_METHOD"] === "POST"){
+        if(isset($_POST['login'])){
+            header("Location: login.php");
+            die;
+        }
+
+        if(isset($_POST['new_acct'])){
+            header("Location: new_account.php");
+            die;
+        }
+    }
 
 
     $query = $_GET["query"];
@@ -57,7 +68,7 @@
 
         //$posts_result = $conn->query("SELECT * FROM post WHERE user_id = 3");
 
-        $posts_stmt = $conn->prepare("SELECT * FROM post WHERE user_id = ?");
+        $posts_stmt = $conn->prepare("SELECT post_id, LEFT(content, 30) as content, post_time FROM post WHERE user_id = ?");
         $posts_stmt->bind_param("i", $user_id);
         $posts_stmt->execute();
         $posts_result = $posts_stmt->get_result();
@@ -71,15 +82,19 @@
             echo '<img width="100" height="100" src="' . $user_row['pfp'] . '"></img>';
             echo $user_row['username'] . ' (' . $user_row['handle'] . ') <br>';
             echo 'Last login: ' . $user_row['last_login_ip'] . ' at ' . $user_row['last_login_time'] . '<br>';
-
-            echo $post_row['content'] . "<br>" . $post_row['post_time'] . "<hr>";
+            echo '<a href="post.php?post_id=' . $post_row['post_id'] . '">' .$post_row['content'] . "...</a><br>" . $post_row['post_time'] . "<hr>";
         }
     }
 
     if($_GET["query"] === ""){
-        header("Location: index.php");
-        die;
+        //header("Location: index.php");
+        //die;
+        echo 'No search query provided!';
     }
 
 
 ?>
+
+</body>
+</html>
+
