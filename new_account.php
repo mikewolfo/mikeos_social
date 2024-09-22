@@ -41,9 +41,6 @@
 
 
 
-    echo 'INSERT INTO user VALUES(NULL, ?, ?, ?, "' . $ip . '" , CURRENT_TIMESTAMP(), "/res/defaultpfp.jpg", "/res/defaultbanner.jpg", "Nothing to see here yet...");';
-
-
     if($_SERVER["REQUEST_METHOD"] === "POST"){
 
         //basic input sanitization
