@@ -20,8 +20,28 @@
     </form>
 
     <form method="POST" action="index.php">
-        <input type="hidden" name="login">
-        <input type="submit" value="Login">
+        <?php
+
+            include 'db_connect.php';
+
+            //TODO sanitize cookie variables!
+
+            if(isset($_COOKIE['login_session'])){
+
+                $user_stmt = $conn->prepare('SELECT u.user_id, u.handle, c.cookie_id FROM user as u, cookies as c WHERE u.user_id = c.user_id AND cookie_id = ?');
+                $user_stmt->bind_param("s", $_COOKIE['login_session']);
+                $user_stmt->execute();
+                $user_result = $user_stmt->get_result();
+                $user_row = $user_result->fetch_assoc();
+
+                echo 'Logged in as <b>' . var_dump($user_result) . '</b>
+                      <input type="hidden" name="logout">
+                      <input type="submit" value="Logout">';
+            } else {
+                echo '<input type="hidden" name="login">
+                      <input type="submit" value="Login">';        
+            }
+        ?>
     </form>
 
     <?php
@@ -29,9 +49,22 @@
 
     include 'db_connect.php';
 
+
+    //goto correct page if a button leads to somewhere other than index.php
+    //or just handle buttons that aren't doing the search query
     if($_SERVER["REQUEST_METHOD"] === "POST"){
         if(isset($_POST['login'])){
             header("Location: login.php");
+            die;
+        }
+
+        if(isset($_POST['logout'])){
+
+            $user_stmt = $conn->prepare('UPDATE cookies SET in_use = FALSE WHERE cookie_id = ?;');
+            $user_stmt->bind_param("s", $_COOKIE['login_session']);
+            $user_stmt->execute();
+            setcookie("login_session", "", time() - 3600, '/');      
+            header("Location: index.php");
             die;
         }
 

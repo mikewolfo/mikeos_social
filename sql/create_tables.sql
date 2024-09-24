@@ -12,8 +12,6 @@ CREATE TABLE user (
     PRIMARY KEY (user_id)
 );
 
-
-
 CREATE TABLE post (
 	post_id int NOT NULL AUTO_INCREMENT,
 	user_id int NOT NULL,
@@ -29,6 +27,19 @@ CREATE TABLE token (
     token varchar(511) NOT NULL,
     user_id int,
     PRIMARY KEY (token),
+    FOREIGN KEY (user_id) REFERENCES user(user_id)
+);
+
+CREATE TABLE cookies (
+    cookie_id varchar(511) NOT NULL,
+    user_id int NOT NULL,
+    in_use boolean NOT NULL,
+    creation_ip char(15) NOT NULL,
+    last_used_from_ip char(15) NOT NULL,
+    creation_time TIMESTAMP NOT NULL,
+    last_used_time TIMESTAMP NOT NULL,
+    expiration_time TIMESTAMP NOT NULL,
+    PRIMARY KEY (cookie_id), 
     FOREIGN KEY (user_id) REFERENCES user(user_id)
 );
 

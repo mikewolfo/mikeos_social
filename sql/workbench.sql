@@ -4,10 +4,11 @@ FROM user;
 use mikeos_social;
 
 select * from user;
+select * from token where user_id = 10;
 
-delete from user where user_id = 7;
+select * from cookies;
 
-select * from token where token = 'acdvzuntyxdjbnzjkoxdgklinvbzorhrvkmwhzphysqzhpktfixmukwjgzjwq';
+UPDATE token SET user_id = NULL where token = 'acdvzuntyxdjbnzjkoxdgklinvbzorhrvkmwhzphysqzhpktfixmukwjgzjwq';
 
 SELECT count(*) as count FROM token WHERE token = 'acdvzuntyxdjbnzjkoxdgklinvbzorhrvkmwhzphysqzhpktfixmukwjgzjwq' AND user_id IS NULL;
 
