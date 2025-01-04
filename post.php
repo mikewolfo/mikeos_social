@@ -10,6 +10,9 @@
     <div id="postContent">
 
         <?php 
+
+            //TODO continue input sanitization on http get
+
             include 'db_connect.php';
 
             $post_id = $_GET['post_id'];
